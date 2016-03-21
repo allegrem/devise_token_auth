@@ -91,7 +91,7 @@ module DeviseTokenAuth::Concerns::SetUserByToken
 
       # Lock the user record during any auth_header updates to ensure
       # we don't have write contention from multiple threads
-      @resource.with_lock do
+      @resource.with_lock timeout: 1, wait: true do
         # should not append auth header if @resource related token was
         # cleared by sign out in the meantime
         return if @used_auth_by_token && @resource.tokens[@client_id].nil?
